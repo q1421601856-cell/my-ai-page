@@ -24,7 +24,7 @@
             height: 100%;
         }
 
-        body {
+                body {
             background-image: url('1790602688051.jpeg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -35,16 +35,22 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            /* 改用动态视口高度，解决手机浏览器上下滚动条抖动 */
             min-height: 100vh;
+            min-height: 100dvh;
+            /* 改为顶部对齐，并留出足够的安全上下边距，防止内容被遮挡或挤压 */
+            justify-content: flex-start;
+            padding-top: 4.5rem;
+            padding-bottom: 2rem;
+            padding-left: clamp(0.8rem, 4vw, 1.6rem);
+            padding-right: clamp(0.8rem, 4vw, 1.6rem);
             margin: 0;
-            padding: clamp(0.8rem, 4vw, 1.6rem);
             box-sizing: border-box;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* 赛博网格背景叠层（不遮挡内容） */
+        /* 赛博网格背景叠层 */
         body::before {
             content: '';
             position: fixed;
@@ -80,6 +86,33 @@
             pointer-events: none;
             z-index: 1;
             mix-blend-mode: overlay;
+        }
+
+        /* BGM 音乐控制按钮样式 */
+        .music-control {
+            position: absolute;
+            top: 1rem;
+            right: 1.2rem;
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 0.35rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: #7dd3fc;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+            z-index: 10;
+            user-select: none;
+        }
+
+        .music-control:hover {
+            background: rgba(14, 165, 233, 0.3);
+            border-color: rgba(56, 189, 248, 0.7);
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
         }
 
         /* 赛博朋克高斯模糊科技感卡片 */
@@ -327,6 +360,16 @@
     </style>
 </head>
 <body>
+    <!-- BGM 音乐悬浮控制按钮 -->
+    <div class="music-control" id="musicBtn" onclick="toggleMusic()">
+        <span id="musicIcon">🔇</span> <span id="musicText">BGM 关闭</span>
+    </div>
+
+    <!-- 隐藏式音频标签 -->
+    <audio id="bgm" loop preload="auto">
+        <source src="bgm.mp3" type="audio/mpeg">
+    </audio>
+
     <div class="card">
         <span class="corner tl"></span>
         <span class="corner tr"></span>
@@ -345,7 +388,7 @@
 
             <div class="btn-group">
                 <button class="btn" onclick="startStory()">🚀 进入科幻任务</button>
-                <a href="https://genshin.hoyoverse.com/zh-tw" class="btn btn-secondary" target="_blank" style="text-align: center;">✨ 原神启动！</a>
+                <a href="https://genshin.hoyoverse.com/zh-tw" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" style="text-align: center;">✨ 原神启动！</a>
             </div>
         </div>
 
@@ -357,7 +400,7 @@
         </div>
     </div>
 
-    <!-- 脚本：时钟与科幻剧情逻辑 -->
+    <!-- 脚本：时钟、BGM与科幻剧情逻辑 -->
     <script>
         // 1. 实时时钟逻辑
         function updateClock() {
@@ -374,7 +417,31 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // 2. 科幻互动剧情数据与状态机
+        // 2. BGM 音乐控制逻辑
+        const bgm = document.getElementById('bgm');
+        const musicBtn = document.getElementById('musicBtn');
+        const musicIcon = document.getElementById('musicIcon');
+        const musicText = document.getElementById('musicText');
+        let isPlaying = false;
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgm.pause();
+                musicIcon.innerText = "🔇";
+                musicText.innerText = "BGM 关闭";
+                isPlaying = false;
+            } else {
+                bgm.play().then(() => {
+                    musicIcon.innerText = "🔊";
+                    musicText.innerText = "BGM 播放";
+                    isPlaying = true;
+                }).catch(err => {
+                    console.log("自动播放被浏览器拦截，等待用户交互", err);
+                });
+            }
+        }
+
+        // 3. 科幻互动剧情数据与状态机
         const storyData = {
             start: {
                 title: "⚠️ 紧急状态：深空警报",
@@ -434,6 +501,10 @@
         };
 
         function startStory() {
+            if (!isPlaying) {
+                toggleMusic();
+            }
+
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('story-box').style.display = 'block';
             showNode('start');
@@ -444,7 +515,7 @@
             document.getElementById('story-title').innerText = node.title;
             const storyText = document.getElementById('story-text');
             storyText.innerText = node.text;
-            // 重新触发淡入动画
+            
             storyText.classList.remove('fade-in');
             void storyText.offsetWidth;
             storyText.classList.add('fade-in');
@@ -459,7 +530,6 @@
                     btn.className = 'btn btn-secondary';
                 }
                 btn.innerText = choice.text;
-                // 选项错峰入场
                 btn.style.animationDelay = (index * 0.06) + 's';
                 btn.onclick = () => {
                     if (choice.next === 'home') {
@@ -477,7 +547,7 @@
             document.getElementById('home-view').style.display = 'block';
         }
 
-        // 3. 水波纹点击反馈（不影响原有 onclick 逻辑）
+        // 4. 水波纹点击反馈
         function attachRipple() {
             document.addEventListener('pointerdown', (e) => {
                 const btn = e.target.closest('.btn');
