@@ -44,7 +44,17 @@
             text-decoration: none;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            /* 1. 加上这一行：让所有的变化都有 0.3 秒的平滑过渡动画 */
+            transition: all 0.3s ease; 
         }
+
+        /* 2. 鼠标悬停时的状态 */
+        .btn:hover { 
+            background: #60a5fa;                  /* 悬停时背景颜色变浅一点 */
+            transform: translateY(-3px);           /* 悬停时按钮往上轻轻浮起 3 像素 */
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4); /* 阴影变大，营造发光感 */
+        }
+
         .btn:hover { background: #2563eb; }
     </style>
 </head>
