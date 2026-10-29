@@ -6,7 +6,7 @@
     <title>我的 AI 空间站</title>
     <style>
         body {
-            /* 最外层大背景：直接读取你上传的 photo1.jpg */
+            /* 保留原有大背景与防重复平铺设置 */
             background-image: url('1790602688051.jpeg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -18,74 +18,118 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
+            min-height: 100vh;
             margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
         }
         .card {
-            /* 中间卡片：改为半透明磨砂黑，这样能清晰透出你的背景大图 */
-            background: rgba(15, 23, 42, 0.25);
+            /* 中间半透明磨砂卡片 */
+            background: rgba(15, 23, 42, 0.35);
             backdrop-filter: blur(8px);
-            padding: 2.5rem;
+            padding: 2rem;
             border-radius: 1rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.8);
             text-align: center;
-            max-width: 400px;
-            width: 90%;
+            max-width: 450px;
+            width: 100%;
             border: 1px solid rgba(255, 255, 255, 0.2);
             transition: transform 0.3s ease, border-color 0.3s ease;
+            box-sizing: border-box;
         }
         .card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-3px);
             border-color: rgba(56, 189, 248, 0.6);
         }
-        h1 { margin-bottom: 0.5rem; color: #38bdf8; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        p { color: #f1f5f9; margin-bottom: 1.5rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
+        h1 { margin-bottom: 0.5rem; color: #38bdf8; text-shadow: 0 2px 4px rgba(0,0,0,0.5); font-size: 1.5rem; }
+        p { color: #f1f5f9; margin-bottom: 1.2rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); font-size: 0.95rem; line-height: 1.5; }
         
-        /* 实时时钟的专属样式：发光科技感字体 */
+        /* 实时时钟样式 */
         #clock {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: #38bdf8;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.2rem;
             font-weight: bold;
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
             letter-spacing: 1px;
         }
 
+        /* 按钮通用与触屏适配样式 */
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1rem;
+        }
         .btn {
-            display: inline-block;
+            display: block;
+            width: 100%;
             background: #3b82f6;
             color: white;
-            padding: 0.75rem 1.5rem;
+            padding: 0.85rem 1rem;
             border-radius: 0.5rem;
             text-decoration: none;
             font-weight: bold;
             box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            /* 1. 加上这一行：让所有的变化都有 0.3 秒的平滑过渡动画 */
-            transition: all 0.3s ease; 
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .btn:hover {
+            background: #60a5fa;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4);
+        }
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.25);
         }
 
-        /* 2. 鼠标悬停时的状态 */
-        .btn:hover { 
-            background: #60a5fa;                  /* 悬停时背景颜色变浅一点 */
-            transform: translateY(-3px);           /* 悬停时按钮往上轻轻浮起 3 像素 */
-            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.4); /* 阴影变大，营造发光感 */
+        /* 剧情故事区域 */
+        #story-box {
+            text-align: left;
+            display: none;
         }
-        
+        #story-text {
+            min-height: 90px;
+            margin-bottom: 1.2rem;
+            color: #e2e8f0;
+            font-size: 1rem;
+        }
     </style>
 </head>
 <body>
     <div class="card">
-        <h1>你只是怕了。这谁不怕</h1>
-        <p>这是我在三星手机上通过 GitHub 搭建的第一个个人网页，正在探索 AI 的世界。</p>
-        
-        <!-- 实时时钟显示的位置 -->
-        <div id="clock">加载中...</div>
+        <!-- 首页默认显示区域 -->
+        <div id="home-view">
+            <h1>你只是怕了。这谁不怕</h1>
+            <p>这是我在三星手机上通过 GitHub 搭建的第一个个人网页，正在探索 AI 的世界。</p>
+            
+            <!-- 实时时钟 -->
+            <div id="clock">加载中...</div>
 
-        <a href="https://genshin.hoyoverse.com/zh-tw" class="btn" target="_blank">原神启动！</a>
+            <div class="btn-group">
+                <button class="btn" onclick="startStory()">进入科幻任务</button>
+                <a href="https://genshin.hoyoverse.com/zh-tw" class="btn btn-secondary" target="_blank" style="text-align: center;">原神启动！</a>
+            </div>
+        </div>
+
+        <!-- 科幻互动剧情交互区域 -->
+        <div id="story-box">
+            <h1 id="story-title" style="font-size: 1.25rem; margin-bottom: 0.8rem; color: #f59e0b;"></h1>
+            <div id="story-text"></div>
+            <div id="story-choices" class="btn-group"></div>
+        </div>
     </div>
 
-    <!-- 让时钟每秒自动跳动的脚本 -->
+    <!-- 脚本：时钟与科幻剧情逻辑 -->
     <script>
+        // 1. 实时时钟逻辑
         function updateClock() {
             const now = new Date();
             const year = now.getFullYear();
@@ -95,11 +139,59 @@
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
             
-            // 组合成好看的格式
             document.getElementById('clock').innerText = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
         updateClock();
-        setInterval(updateClock, 1000); // 每1000毫秒（1秒）刷新一次
-    </script>
-</body>
-</html>
+        setInterval(updateClock, 1000);
+
+        // 2. 科幻互动剧情数据与状态机
+        const storyData = {
+            start: {
+                title: "⚠️ 紧急状态：深空警报",
+                text: "你是一个失去通讯的空间站值班员。系统突然刺耳地鸣叫起来：氧气储备只能维持十分钟，而同时，舱外传来了身份不明的诡异求救信号。你决定先做什麽？",
+                choices: [
+                    { text: "1. 立即打开外部通讯频道", next: "comm" },
+                    { text: "2. 检查空间站的氧气维持系统", next: "oxygen" },
+                    { text: "3. 调出外景监控，调查求救信号来源", next: "signal" }
+                ]
+            },
+            comm: {
+                title: "📡 外部通讯尝试",
+                text: "你尝试强行接通外部频道。滋滋的电流声中，一个冰冷机械合成音响起：‘警告，区域隔离已启动，您已被锁定。’ 受到电磁冲击，氧气倒计时加速到了 5 分钟！",
+                choices: [
+                    { text: "情急之下，立刻冲去手动检查氧气阀门", next: "oxygen_from_comm" },
+                    { text: "不管氧气，强行向求救信号发送盲发请求", next: "ending_a" }
+                ]
+            },
+            oxygen: {
+                title: "⚙️ 氧气系统排查",
+                text: "你扑向主控制台，发现主氧气阀门被某种未知权限物理锁死。不过，旁边还有一个老旧的备用机械释放杆，但拉动它可能会引起电路短路。",
+                choices: [
+                    { text: "果断拉下备用机械释放杆！", next: "ending_b" },
+                    { text: "放弃氧气，立刻转头去查外景求救信号", next: "signal" }
+                ]
+            },
+            oxygen_from_comm: {
+                title: "⚙️ 绝境求生",
+                text: "你冒着剧烈喘息的危险冲到氧气舱，在倒计时归零前狠狠砸下了备用机械释放杆。伴随着沉闷的轰鸣，备用氧气喷涌而出！",
+                choices: [
+                    { text: "查看舱外情况", next: "ending_b" }
+                ]
+            },
+            signal: {
+                title: "🌌 未知信号源",
+                text: "你调出外景摄像头。屏幕上，一艘早已失踪三十年的同型号旧空间站正静静地贴着你的舱体漂浮，上面没有任何生命体征，却正向你不断发送着重复的摩斯密码。",
+                choices: [
+                    { text: "向它发送自动对接请求", next: "ending_c" },
+                    { text: "切断所有外部电源，假装这里什么也没有", next: "ending_a" }
+                ]
+            },
+            ending_a: {
+                title: "❌ 结局一：深空孤寂",
+                text: "通讯彻底瘫痪，氧气耗尽。在黑暗与绝对的寂静中，你闭上双眼，空间站化为了宇宙中又一颗冰冷的漂浮残骸。\n\n【达成结局：窒息迷失】",
+                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+            },
+            ending_b: {
+                title: "✅ 结局二：绝境逢生",
+                text: "你成功手动开启了备用氧气！几分钟后，远处的联合舰队巡逻船检测到了你的应急求救波段，拖曳救援船缓缓靠岸。你得救了。\
+
