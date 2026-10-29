@@ -378,11 +378,11 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* 🦊 3D 八重神子风格桌宠容器 */
+        /* 🌸 GIF 动图桌宠容器（右下角悬浮） */
         #cyber-pet {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
+            bottom: 25px;
+            right: 25px;
             z-index: 99;
             display: flex;
             flex-direction: column;
@@ -396,9 +396,9 @@
             cursor: grabbing;
         }
 
-        /* 桌宠对话气泡（粉白神子风） */
+        /* 桌宠对话气泡 */
         #pet-bubble {
-            background: rgba(75, 18, 55, 0.88);
+            background: rgba(75, 18, 55, 0.9);
             border: 1px solid rgba(244, 114, 182, 0.7);
             color: #fbcfe8;
             padding: 0.4rem 0.8rem;
@@ -413,44 +413,27 @@
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* 🦊 3D 立体八重神子主题头像样式 */
+        /* 🌸 GIF 动图尺寸容器（可在这里调整动图在网页上的大小） */
         #pet-avatar {
-            width: 60px;
-            height: 60px;
-            /* 3D 立体粉红红白交织的曲面渐变（契合八重神子经典配色） */
-            background: radial-gradient(circle at 30% 30%, #f472b6 0%, #db2777 45%, #9d174d 70%, #4c0519 100%);
-            border-radius: 50%;
-            /* 双层高光金属/全息高级边框 */
-            border: 2px solid rgba(253, 230, 138, 0.9); /* 带有鸣神大社金饰感的金色边缘 */
-            box-shadow: 
-                inset -6px -6px 14px rgba(112, 26, 75, 0.8), /* 内部立体暗部 */
-                inset 4px 4px 10px rgba(255, 255, 255, 0.65), /* 内部立体高光 */
-                0 12px 28px rgba(236, 72, 153, 0.5);         /* 底部粉色悬浮投影，增强 3D 空间感 */
+            width: 100px;  /* 动图宽度 */
+            height: 100px; /* 动图高度 */
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.8rem;
-            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.4);
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-            overflow: hidden;
+            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+            transition: transform 0.15s ease;
         }
 
-        /* 如果你上传了 `yae.png` 图片，这段样式会确保图片完美填满 3D 球体 */
+        /* 让 GIF 动图完美充满容器且不失真 */
         #pet-avatar img {
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
         }
 
-        /* 拖拽时的 3D 物理挤压、受力倾斜与金红色受力高光 */
+        /* 拖拽时的受力物理挤压与旋转动画 */
         #cyber-pet.dragging #pet-avatar {
-            transform: scale(0.92) rotate(12px) translateY(4px);
-            box-shadow: 
-                inset -4px -4px 10px rgba(180, 83, 9, 0.8),
-                inset 4px 4px 8px rgba(255, 255, 255, 0.6),
-                0 6px 15px rgba(245, 158, 11, 0.6);
-            background: radial-gradient(circle at 32% 32%, #fde68a 0%, #d97706 45%, #b45309 70%, #451a03 100%);
-            border-color: #fcd34d;
+            transform: scale(0.9) rotate(8deg) translateY(4px);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -506,14 +489,12 @@
         </div>
     </div>
 
-    <!-- 🦊 3D 八重神子风格桌宠挂件 -->
+    <!-- 🤖 动态八重神子桌宠挂件 -->
     <div id="cyber-pet">
-        <div id="pet-bubble">哎呀，小家伙，又在偷懒吗？</div>
+        <div id="pet-bubble">...（眨眼）</div>
         <div id="pet-avatar">
-            <!-- 如果你有名为 yae.png 的图片，请把下面注释解开： -->
-            <!-- <img src="yae.png" alt="八重神子"> -->
-            <!-- 如果没有图片，默认显示极具神子特色的狐狸/绯樱 Emoji -->
-            🦊
+            <!-- 请将你的动图命名为 yae.gif 并放入 GitHub 仓库根目录 -->
+            <img src="yae.gif" alt="八重神子动图" onerror="this.style.display='none'; this.parentNode.innerText='🦊';">
         </div>
     </div>
 
@@ -669,7 +650,7 @@
             document.getElementById('home-view').style.display = 'block';
         }
 
-        // 4. 🤖 完美平滑的桌宠拖拽与物理碰撞引擎（带有八重神子专属语录）
+        // 4. 🤖 完美的桌宠拖拽物理引擎（适配动图）
         const pet = document.getElementById('cyber-pet');
         const bubble = document.getElementById('pet-bubble');
         const petDialogues = [
@@ -682,8 +663,8 @@
         ];
 
         let startX, startY;
-        let currentRight = 30;
-        let currentBottom = 30;
+        let currentRight = 25;
+        let currentBottom = 25;
         let hasMoved = false;
 
         function dragStart(e) {
@@ -721,8 +702,8 @@
             currentRight -= deltaX;
             currentBottom -= deltaY;
 
-            const maxRight = window.innerWidth - 70;
-            const maxBottom = window.innerHeight - 80;
+            const maxRight = window.innerWidth - 110;
+            const maxBottom = window.innerHeight - 130;
             
             currentRight = Math.max(10, Math.min(maxRight, currentRight));
             currentBottom = Math.max(10, Math.min(maxBottom, currentBottom));
