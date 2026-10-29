@@ -378,7 +378,7 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* 🌸 GIF 动图桌宠容器（支持自由缩放） */
+        /* 🌸 多动作桌宠容器 */
         #cyber-pet {
             position: fixed;
             bottom: 25px;
@@ -413,25 +413,42 @@
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* 🌸 动图尺寸容器（可以通过修改这里的大小，或者通过双击桌宠自动循环切换大、中、小三种尺寸） */
+        /* 🌟 动图尺寸容器 + 待机呼吸浮动动画 */
         #pet-avatar {
-            width: 100px;  /* 默认宽度 */
-            height: 100px; /* 默认高度 */
+            width: 100px;
+            height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
             filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
             transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease;
+            animation: petIdleFloat 3.5s ease-in-out infinite;
         }
 
-        #pet-avatar img {
+        @keyframes petIdleFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50%      { transform: translateY(-8px) rotate(2deg); }
+        }
+
+        /* 🌟 核心绝招：给图片加入“无缝丝滑渐变过渡”类 */
+        #pet-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
+            transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* 切换时的淡出/缩放瞬间状态 */
+        #pet-img.switching {
+            opacity: 0;
+            transform: scale(0.85) rotate(-5deg);
         }
 
         #cyber-pet.dragging #pet-avatar {
-            transform: scale(0.9) rotate(8deg) translateY(4px);
+            animation: none;
+            transform: scale(0.9) rotate(12deg) translateY(4px);
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -487,15 +504,15 @@
         </div>
     </div>
 
-    <!-- 🤖 动态八重神子桌宠挂件（支持双击切换大小） -->
+    <!-- 🤖 多动作八重神子桌宠挂件 -->
     <div id="cyber-pet">
-        <div id="pet-bubble">双击我可以改变大小哦！</div>
+        <div id="pet-bubble">双击变大小，点我丝滑换动作！</div>
         <div id="pet-avatar">
-            <img src="yae.gif" alt="八重神子动图" onerror="this.style.display='none'; this.parentNode.innerText='🦊';">
+            <img id="pet-img" src="yae.gif" alt="八重神子" onerror="this.style.display='none'; this.parentNode.innerText='🦊';">
         </div>
     </div>
 
-    <!-- 脚本：时钟, BGM, 剧情, 拖拽与自由缩放逻辑 -->
+    <!-- 脚本：时钟、BGM、剧情、拖拽、双击缩放与无缝淡入淡出切换逻辑 -->
     <script>
         // 1. 实时时钟逻辑
         function updateClock() {
@@ -647,17 +664,17 @@
             document.getElementById('home-view').style.display = 'block';
         }
 
-        // 4. 🤖 拖拽物理引擎 + 🌟 动态双击自由缩放功能
+        // 4. 🤖 拖拽、双击缩放 + 🌟 无缝淡入淡出的多动作切换引擎
         const pet = document.getElementById('cyber-pet');
         const avatar = document.getElementById('pet-avatar');
+        const petImg = document.getElementById('pet-img');
         const bubble = document.getElementById('pet-bubble');
-        const petDialogues = [
-            "哎呀，小家伙，又在偷懒吗？",
-            "鸣神大社可没有这种科学技术~",
-            "原神启动？记得带上我哦！",
-            "嗯？你想从我这里听到什么情报呢？",
-            "这谁不怕？不过有我在，安心好啦。",
-            "尺寸刚刚好，我很喜欢~"
+
+        const petActions = [
+            { src: "yae.gif", text: "哎呀，小家伙，又在偷懒吗？" },
+            { src: "yae_cry.gif", text: "呜…你怎么忍心欺负我嘛！" },
+            { src: "yae_eat.gif", text: "油豆腐，我的最爱~ 唔姆唔姆。" },
+            { src: "yae_hat.gif", text: "戴上帽子，本宫就是深空舰长啦！" }
         ];
 
         let startX, startY;
@@ -665,16 +682,14 @@
         let currentBottom = 25;
         let hasMoved = false;
 
-        // 尺寸档位循环（小 -> 中 -> 大 -> 特大）
         const sizes = [
             { w: '70px', h: '70px', name: '小号模式' },
             { w: '100px', h: '100px', name: '标准模式' },
-            { w: '140px', h: '140px', name: '大号看板娘' },
-            { w: '180px', h: '180px', name: '超大巨型神子' }
+            { w: '140px', h: '140px', name: '大号看板娘' }
         ];
-        let currentSizeIndex = 1; // 默认中号 (100px)
+        let currentSizeIndex = 1;
 
-        // 🌟 双击桌宠即可循环切换大小！
+        // 双击切换大小
         pet.addEventListener('dblclick', () => {
             currentSizeIndex = (currentSizeIndex + 1) % sizes.length;
             const newSize = sizes[currentSizeIndex];
@@ -739,9 +754,20 @@
             window.removeEventListener('touchmove', dragMove);
             window.removeEventListener('touchend', dragEnd);
 
+            // 点击时触发无缝动作切换
             if (!hasMoved) {
-                const randomMsg = petDialogues[Math.floor(Math.random() * petDialogues.length)];
-                bubble.innerText = randomMsg;
+                const randomAction = petActions[Math.floor(Math.random() * petActions.length)];
+                
+                // 🌟 核心无缝切换逻辑：先让图片透明度变 0 产生缩放缓冲
+                petImg.classList.add('switching');
+
+                setTimeout(() => {
+                    petImg.src = randomAction.src; // 替换动图
+                    petImg.classList.remove('switching'); // 恢复透明度与大小，实现丝滑淡入
+                }, 200); // 0.2秒的过渡时间
+
+                // 弹出对应台词
+                bubble.innerText = randomAction.text;
                 bubble.style.transform = 'scale(1.1)';
                 setTimeout(() => bubble.style.transform = 'scale(1)', 200);
             }
