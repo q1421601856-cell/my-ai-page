@@ -24,7 +24,7 @@
             height: 100%;
         }
 
-                body {
+        body {
             background-image: url('1790602688051.jpeg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -35,10 +35,8 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* 改用动态视口高度，解决手机浏览器上下滚动条抖动 */
             min-height: 100vh;
             min-height: 100dvh;
-            /* 改为顶部对齐，并留出足够的安全上下边距，防止内容被遮挡或挤压 */
             justify-content: flex-start;
             padding-top: 4.5rem;
             padding-bottom: 2rem;
@@ -88,11 +86,19 @@
             mix-blend-mode: overlay;
         }
 
-        /* BGM 音乐控制按钮样式 */
-        .music-control {
+        /* 音乐与音量整体控制容器 */
+        .music-control-container {
             position: absolute;
             top: 1rem;
             right: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 10;
+        }
+
+        /* BGM 音乐控制按钮样式 */
+        .music-control {
             background: rgba(14, 165, 233, 0.15);
             border: 1px solid rgba(56, 189, 248, 0.35);
             padding: 0.35rem 0.75rem;
@@ -105,7 +111,6 @@
             gap: 0.3rem;
             backdrop-filter: blur(8px);
             transition: all 0.25s ease;
-            z-index: 10;
             user-select: none;
         }
 
@@ -113,6 +118,43 @@
             background: rgba(14, 165, 233, 0.3);
             border-color: rgba(56, 189, 248, 0.7);
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
+        }
+
+        /* 音量滑块悬浮框 */
+        .volume-slider-box {
+            background: rgba(14, 165, 233, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            padding: 0.35rem 0.6rem;
+            border-radius: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            backdrop-filter: blur(8px);
+            font-size: 0.7rem;
+            color: #7dd3fc;
+        }
+
+        /* HTML5 原生滑动条美化 */
+        .volume-slider-box input[type="range"] {
+            width: 60px;
+            height: 4px;
+            background: rgba(56, 189, 248, 0.3);
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        /* 滑块小圆点美化 */
+        .volume-slider-box input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #38bdf8;
+            cursor: pointer;
+            box-shadow: 0 0 6px #38bdf8;
         }
 
         /* 赛博朋克高斯模糊科技感卡片 */
@@ -360,9 +402,16 @@
     </style>
 </head>
 <body>
-    <!-- BGM 音乐悬浮控制按钮 -->
-    <div class="music-control" id="musicBtn" onclick="toggleMusic()">
-        <span id="musicIcon">🔇</span> <span id="musicText">BGM 关闭</span>
+    <!-- BGM 音乐与音量悬浮控制面板 -->
+    <div class="music-control-container">
+        <div class="music-control" id="musicBtn" onclick="toggleMusic()">
+            <span id="musicIcon">🔇</span> <span id="musicText">BGM 关闭</span>
+        </div>
+        <div class="volume-slider-box">
+            <span>🔈</span>
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7" oninput="adjustVolume(this.value)" title="调节音量">
+            <span>🔊</span>
+        </div>
     </div>
 
     <!-- 隐藏式音频标签 -->
@@ -400,7 +449,7 @@
         </div>
     </div>
 
-    <!-- 脚本：时钟、BGM与科幻剧情逻辑 -->
+    <!-- 脚本：时钟、BGM、音量调节与科幻剧情逻辑 -->
     <script>
         // 1. 实时时钟逻辑
         function updateClock() {
@@ -417,12 +466,15 @@
         updateClock();
         setInterval(updateClock, 1000);
 
-        // 2. BGM 音乐控制逻辑
+        // 2. BGM 音乐与音量控制逻辑
         const bgm = document.getElementById('bgm');
         const musicBtn = document.getElementById('musicBtn');
         const musicIcon = document.getElementById('musicIcon');
         const musicText = document.getElementById('musicText');
         let isPlaying = false;
+
+        // 初始化默认音量为 70%
+        bgm.volume = 0.7;
 
         function toggleMusic() {
             if (isPlaying) {
@@ -438,6 +490,18 @@
                 }).catch(err => {
                     console.log("自动播放被浏览器拦截，等待用户交互", err);
                 });
+            }
+        }
+
+        // 音量调节函数
+        function adjustVolume(val) {
+            bgm.volume = val;
+            if (val == 0 && isPlaying) {
+                musicIcon.innerText = "🔇";
+                musicText.innerText = "BGM 静音";
+            } else if (val > 0 && isPlaying) {
+                musicIcon.innerText = "🔊";
+                musicText.innerText = "BGM 播放";
             }
         }
 
@@ -567,4 +631,3 @@
     </script>
 </body>
 </html>
-
