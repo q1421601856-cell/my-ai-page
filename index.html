@@ -6,7 +6,10 @@
     <title>我的 AI 空间站</title>
     <style>
         body {
-            background-color: #0f172a;
+            /* 1. 这里是修改最外层的背景（原本是蓝色部分） */
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
             color: #f8fafc;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
@@ -17,16 +20,21 @@
             margin: 0;
         }
         .card {
-            background: #064e3b;
-            padding: 2rem;
+            /* 2. 这里是修改中间卡片的背景（原本是绿色部分） */
+            background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            padding: 2.5rem;
             border-radius: 1rem;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.8);
             text-align: center;
             max-width: 400px;
             width: 90%;
+            /* 加一点半透明遮罩，让上面的字能看清 */
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        h1 { margin-bottom: 0.5rem; color: #38bdf8; }
-        p { color: #94a3b8; margin-bottom: 1.5rem; }
+        h1 { margin-bottom: 0.5rem; color: #38bdf8; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+        p { color: #f1f5f9; margin-bottom: 1.5rem; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
         .btn {
             display: inline-block;
             background: #3b82f6;
@@ -35,7 +43,7 @@
             border-radius: 0.5rem;
             text-decoration: none;
             font-weight: bold;
-            transition: background 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
         .btn:hover { background: #2563eb; }
     </style>
@@ -48,3 +56,4 @@
     </div>
 </body>
 </html>
+
