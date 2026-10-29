@@ -633,7 +633,7 @@
         }
 
         // 4. Google Gemini API 聊天机器人逻辑
-        // ⚠️ 请将下面双引号内的 "你的API_KEY填在这里" 替换为你刚刚获取的真实 Key
+        // 你的真实 API Key（已填入以 AQ. 开头的新版凭证）
         const GEMINI_API_KEY = "AQ.Ab8RN6Lx0Y3sDnbNjLuoXRv3sL4vckzgNKMbl7DmwgEKU7ni3A"; 
 
         function openAiChat() {
@@ -665,10 +665,13 @@
             messageBox.scrollTop = messageBox.scrollHeight;
 
             try {
-                // 3. 调用 Google Gemini 免费云端 API (已更新为 gemini-1.5-flash 模型)
+                // 3. 调用 Google Gemini 免费云端 API (已适配新版 AQ. 密钥的专属请求头)
                 const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'x-goog-api-key': GEMINI_API_KEY
+                    },
                     body: JSON.stringify({
                         contents: [{
                             parts: [{ text: "你是一个科幻空间站的舰载人工智能，语气冷静、极客且带有赛博朋克风格。请用简短精炼的中文回答用户： " + userText }]
@@ -683,7 +686,8 @@
                     const aiReply = data.candidates[0].content.parts[0].text;
                     loadingElement.outerHTML = `<div style="color: #e2e8f0;"><b>舰载AI:</b> ${escapeHtml(aiReply)}</div>`;
                 } else {
-                    loadingElement.outerHTML = `<div style="color: #ef4444;"><b>系统错误:</b> AI 未能正确响应，请检查 API Key。</div>`;
+                    console.error("API 返回错误详情:", data);
+                    loadingElement.outerHTML = `<div style="color: #ef4444;"><b>系统错误:</b> AI 未能正确响应，请检查控制台详情。</div>`;
                 }
             } catch (error) {
                 console.error(error);
