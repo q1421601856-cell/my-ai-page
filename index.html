@@ -9,8 +9,19 @@
             --primary-glow: #38bdf8;
             --accent-glow: #f59e0b;
             --neon-blue: #0ea5e9;
-            --bg-glass: rgba(15, 23, 42, 0.65);
+            --neon-pink: #ec4899;
+            --bg-glass: rgba(15, 23, 42, 0.62);
             --border-glass: rgba(56, 189, 248, 0.3);
+            --font-zh: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
+            --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, Menlo, monospace;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            height: 100%;
         }
 
         body {
@@ -20,122 +31,248 @@
             background-position: center;
             background-attachment: fixed;
             color: #f8fafc;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+            font-family: var(--font-zh);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding: 1.2rem;
+            padding: clamp(0.8rem, 4vw, 1.6rem);
             box-sizing: border-box;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* 赛博网格背景叠层（不遮挡内容） */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(56, 189, 248, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
+            background-size: 38px 38px;
+            mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 78%);
+            -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 78%);
+            pointer-events: none;
+            z-index: 0;
+            animation: gridDrift 24s linear infinite;
+        }
+
+        @keyframes gridDrift {
+            from { background-position: 0 0, 0 0; }
+            to   { background-position: 38px 38px, 38px 38px; }
+        }
+
+        /* 扫描线叠层 */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255,255,255,0.02) 0px,
+                rgba(255,255,255,0.02) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+            pointer-events: none;
+            z-index: 1;
+            mix-blend-mode: overlay;
         }
 
         /* 赛博朋克高斯模糊科技感卡片 */
         .card {
+            position: relative;
+            z-index: 2;
             background: var(--bg-glass);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            padding: 2.2rem 1.6rem;
-            border-radius: 1.25rem;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8), 0 0 20px rgba(56, 189, 248, 0.15);
+            backdrop-filter: blur(16px) saturate(140%);
+            -webkit-backdrop-filter: blur(16px) saturate(140%);
+            padding: clamp(1.6rem, 6vw, 2.4rem) clamp(1.2rem, 5vw, 1.8rem);
+            border-radius: 1.4rem;
+            box-shadow:
+                0 18px 45px rgba(0, 0, 0, 0.85),
+                0 0 28px rgba(56, 189, 248, 0.18),
+                inset 0 0 0 1px rgba(255,255,255,0.04);
             text-align: center;
             max-width: 440px;
             width: 100%;
             border: 1px solid var(--border-glass);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
             box-sizing: border-box;
-            position: relative;
+            overflow: hidden;
+            animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both, cardBreath 6s ease-in-out 0.7s infinite;
         }
 
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.97); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes cardBreath {
+            0%, 100% { box-shadow: 0 18px 45px rgba(0,0,0,0.85), 0 0 22px rgba(56,189,248,0.16), inset 0 0 0 1px rgba(255,255,255,0.04); }
+            50%      { box-shadow: 0 18px 50px rgba(0,0,0,0.85), 0 0 38px rgba(56,189,248,0.30), inset 0 0 0 1px rgba(255,255,255,0.07); }
+        }
+
+        /* 顶部渐变流光条 */
         .card::before {
             content: '';
             position: absolute;
             top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-glow), transparent);
+            background: linear-gradient(90deg, transparent, var(--primary-glow), var(--neon-pink), transparent);
+            background-size: 200% 100%;
+            animation: flowLine 4s linear infinite;
         }
 
+        @keyframes flowLine {
+            from { background-position: 200% 0; }
+            to   { background-position: -200% 0; }
+        }
+
+        /* 角落装饰角标 */
+        .card .corner {
+            position: absolute;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(56, 189, 248, 0.55);
+            pointer-events: none;
+        }
+        .card .corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
+        .card .corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
+        .card .corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
+        .card .corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
+
         h1 {
-            margin-bottom: 0.8rem;
-            color: #38bdf8;
-            text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
-            font-size: 1.45rem;
-            letter-spacing: 0.5px;
-            font-weight: 700;
+            margin: 0 0 0.9rem;
+            color: #7dd3fc;
+            text-shadow: 0 0 14px rgba(56, 189, 248, 0.7), 0 0 4px rgba(56,189,248,0.5);
+            font-size: clamp(1.3rem, 5.5vw, 1.6rem);
+            letter-spacing: 0.6px;
+            font-weight: 800;
+            line-height: 1.35;
         }
 
         p {
             color: #cbd5e1;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.8);
-            font-size: 0.95rem;
-            line-height: 1.6;
+            margin: 0 0 1.4rem;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+            font-size: clamp(0.9rem, 3.6vw, 1rem);
+            line-height: 1.75;
+            letter-spacing: 0.3px;
         }
-        
+
         /* 实时动态时钟美化 */
         #clock {
-            font-size: 0.95rem;
-            color: #38bdf8;
-            margin-bottom: 1.5rem;
+            font-family: var(--font-mono);
+            font-size: clamp(0.85rem, 3.6vw, 0.98rem);
+            color: #7dd3fc;
+            margin: 0.2rem 0 1.6rem;
             font-weight: 600;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            font-variant-numeric: tabular-nums;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.65);
             letter-spacing: 1.5px;
-            background: rgba(14, 165, 233, 0.1);
-            padding: 0.4rem 0.8rem;
+            background: rgba(14, 165, 233, 0.12);
+            padding: 0.45rem 0.9rem;
             border-radius: 2rem;
             display: inline-block;
-            border: 1px solid rgba(56, 189, 248, 0.2);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: inset 0 0 12px rgba(56,189,248,0.12);
         }
 
         /* 按钮与交互区域 */
         .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 0.9rem;
-            margin-top: 1.2rem;
+            gap: 0.85rem;
+            margin-top: 1rem;
         }
 
         .btn {
+            position: relative;
             display: block;
             width: 100%;
-            background: linear-gradient(135deg, #0284c7, #2563eb);
-            color: white;
+            background: linear-gradient(135deg, #0284c7, #2563eb 55%, #4f46e5);
+            color: #ffffff;
             padding: 0.95rem 1rem;
-            border-radius: 0.75rem;
+            border-radius: 0.8rem;
             text-decoration: none;
-            font-weight: 600;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
-            transition: all 0.25s ease;
-            border: 1px solid rgba(125, 211, 252, 0.4);
-            cursor: pointer;
-            font-size: 1rem;
-            box-sizing: border-box;
+            font-weight: 700;
+            font-size: clamp(0.95rem, 3.8vw, 1.02rem);
             letter-spacing: 0.5px;
-            position: relative;
+            box-shadow:
+                0 6px 18px rgba(37, 99, 235, 0.45),
+                inset 0 1px 0 rgba(255,255,255,0.25);
+            border: 1px solid rgba(125, 211, 252, 0.5);
+            cursor: pointer;
+            box-sizing: border-box;
             overflow: hidden;
+            transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease;
+            -webkit-user-select: none;
+            user-select: none;
+            text-align: center;
+            line-height: 1.3;
         }
 
-        .btn:active {
-            transform: scale(0.97);
+        /* 流光扫过效果 */
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -120%;
+            width: 60%; height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
+            transform: skewX(-20deg);
+            transition: left 0.6s ease;
+            pointer-events: none;
         }
 
         .btn:hover {
-            background: linear-gradient(135deg, #0ea5e9, #3b82f6);
-            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
-            border-color: rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px);
+            background: linear-gradient(135deg, #0ea5e9, #3b82f6 55%, #6366f1);
+            box-shadow:
+                0 10px 26px rgba(56, 189, 248, 0.6),
+                0 0 18px rgba(56,189,248,0.35),
+                inset 0 1px 0 rgba(255,255,255,0.35);
+            border-color: rgba(186, 230, 253, 0.9);
+        }
+
+        .btn:hover::after {
+            left: 130%;
+        }
+
+        .btn:active {
+            transform: translateY(0) scale(0.97);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
+        }
+
+        /* 水波纹点击反馈 */
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            transform: scale(0);
+            animation: rippleAnim 0.6s ease-out;
+            pointer-events: none;
+        }
+        @keyframes rippleAnim {
+            to { transform: scale(2.6); opacity: 0; }
         }
 
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+            color: #e2e8f0;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.18);
-            border-color: rgba(56, 189, 248, 0.5);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(56, 189, 248, 0.6);
+            box-shadow: 0 8px 22px rgba(0,0,0,0.45), 0 0 16px rgba(56,189,248,0.3);
+            color: #ffffff;
+        }
+
+        .btn-secondary:active {
+            transform: translateY(0) scale(0.97);
         }
 
         /* 剧情故事交互区域 */
@@ -145,30 +282,62 @@
         }
 
         #story-title {
-            color: #f59e0b;
-            text-shadow: 0 0 10px rgba(245, 158, 11, 0.4);
+            color: #fbbf24;
+            text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
+            font-size: clamp(1.15rem, 4.6vw, 1.3rem);
+            margin: 0 0 0.9rem;
+            line-height: 1.4;
+            font-weight: 800;
         }
 
         #story-text {
-            min-height: 100px;
-            margin-bottom: 1.4rem;
+            min-height: 96px;
+            margin-bottom: 1.3rem;
             color: #e2e8f0;
-            font-size: 0.98rem;
-            line-height: 1.65;
-            background: rgba(0, 0, 0, 0.25);
-            padding: 0.9rem;
-            border-radius: 0.5rem;
-            border-left: 3px solid #f59e0b;
+            font-size: clamp(0.92rem, 3.7vw, 1rem);
+            line-height: 1.75;
+            background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));
+            padding: 0.95rem 1rem;
+            border-radius: 0.6rem;
+            border-left: 3px solid var(--accent-glow);
+            box-shadow: inset 0 0 18px rgba(245,158,11,0.06);
+            white-space: pre-line;
+        }
+
+        #story-text.fade-in {
+            animation: textFade 0.45s ease both;
+        }
+        @keyframes textFade {
+            from { opacity: 0; transform: translateY(8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 选项按钮入场错峰 */
+        #story-choices .btn {
+            animation: choiceIn 0.4s ease both;
+        }
+        @keyframes choiceIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation: none !important; transition: none !important; }
         }
     </style>
 </head>
 <body>
     <div class="card">
+        <span class="corner tl"></span>
+        <span class="corner tr"></span>
+        <span class="corner bl"></span>
+        <span class="corner br"></span>
+
         <!-- 首页默认显示区域 -->
         <div id="home-view">
             <h1>你只是怕了。这谁不怕</h1>
             <p>这是我在三星手机上通过 GitHub 搭建的第一个个人网页，正在探索 AI 的世界。</p>
-            
+
             <!-- 实时时钟 -->
             <div>
                 <div id="clock">加载中...</div>
@@ -199,7 +368,7 @@
             const hours = String(now.getHours()).padStart(2, '0');
             const minutes = String(now.getMinutes()).padStart(2, '0');
             const seconds = String(now.getSeconds()).padStart(2, '0');
-            
+
             document.getElementById('clock').innerText = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
         updateClock();
@@ -273,20 +442,27 @@
         function showNode(nodeKey) {
             const node = storyData[nodeKey];
             document.getElementById('story-title').innerText = node.title;
-            document.getElementById('story-text').innerText = node.text;
-            
+            const storyText = document.getElementById('story-text');
+            storyText.innerText = node.text;
+            // 重新触发淡入动画
+            storyText.classList.remove('fade-in');
+            void storyText.offsetWidth;
+            storyText.classList.add('fade-in');
+
             const choicesContainer = document.getElementById('story-choices');
             choicesContainer.innerHTML = '';
-            
-            node.choices.forEach(choice => {
+
+            node.choices.forEach((choice, index) => {
                 const btn = document.createElement('button');
                 btn.className = 'btn';
-                if(choice.next === 'home') {
+                if (choice.next === 'home') {
                     btn.className = 'btn btn-secondary';
                 }
                 btn.innerText = choice.text;
+                // 选项错峰入场
+                btn.style.animationDelay = (index * 0.06) + 's';
                 btn.onclick = () => {
-                    if(choice.next === 'home') {
+                    if (choice.next === 'home') {
                         returnHome();
                     } else {
                         showNode(choice.next);
@@ -300,6 +476,24 @@
             document.getElementById('story-box').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
         }
+
+        // 3. 水波纹点击反馈（不影响原有 onclick 逻辑）
+        function attachRipple() {
+            document.addEventListener('pointerdown', (e) => {
+                const btn = e.target.closest('.btn');
+                if (!btn) return;
+                const rect = btn.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const ripple = document.createElement('span');
+                ripple.className = 'ripple';
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+                btn.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 600);
+            });
+        }
+        attachRipple();
     </script>
 </body>
 </html>
