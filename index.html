@@ -180,7 +180,7 @@
             },
             signal: {
                 title: "🌌 未知信号源",
-                text: "你调出外景摄像头。屏幕上，一艘早已失踪三十年的同型号旧空间站正静静地贴着你的舱体漂浮，上面没有任何生命体征，却正向你不断发送着重复的摩斯密码。",
+                text: "你调出外景摄像头。屏幕上，一艘早已失踪三十年的同型号旧
                 choices: [
                     { text: "向它发送自动对接请求", next: "ending_c" },
                     { text: "切断所有外部电源，假装这里什么也没有", next: "ending_a" }
@@ -193,5 +193,52 @@
             },
             ending_b: {
                 title: "✅ 结局二：绝境逢生",
-                text: "你成功手动开启了备用氧气！几分钟后，远处的联合舰队巡逻船检测到了你的应急求救波段，拖曳救援船缓缓靠岸。你得救了。\
+                text: "你成功手动开启了备用氧气！几分钟后，远处的联合舰队巡逻船检测到了你的应急求救波段，拖曳救援船缓缓靠岸。你得救了。\n\n【达成结局：死地后生】",
+                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+            },
+            ending_c: {
+                title: "🌀 结局三：镜中镜像",
+                text: "对接成功发出咔哒一声巨响。舱门缓缓开启，烟雾散去，对面走出的那个身影穿着和你一模一样的制服，正微笑着向你伸出手……\n\n【达成结局：未知接触】",
+                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+            }
+        };
 
+        function startStory() {
+            document.getElementById('home-view').style.display = 'none';
+            document.getElementById('story-box').style.display = 'block';
+            showNode('start');
+        }
+
+        function showNode(nodeKey) {
+            const node = storyData[nodeKey];
+            document.getElementById('story-title').innerText = node.title;
+            document.getElementById('story-text').innerText = node.text;
+            
+            const choicesContainer = document.getElementById('story-choices');
+            choicesContainer.innerHTML = '';
+            
+            node.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                if(choice.next === 'home') {
+                    btn.className = 'btn btn-secondary';
+                }
+                btn.innerText = choice.text;
+                btn.onclick = () => {
+                    if(choice.next === 'home') {
+                        returnHome();
+                    } else {
+                        showNode(choice.next);
+                    }
+                };
+                choicesContainer.appendChild(btn);
+            });
+        }
+
+        function returnHome() {
+            document.getElementById('story-box').style.display = 'none';
+            document.getElementById('home-view').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
