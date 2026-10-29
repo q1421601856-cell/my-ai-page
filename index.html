@@ -6,7 +6,7 @@
     <title>我的 AI 空间站</title>
     <style>
         body {
-            /* 1. 这里是修改最外层的背景（原本是蓝色部分） */
+            /* 最外层大背景：直接读取你上传的 photo1.jpg */
             background-image: url('photo1.jpg');
             background-size: cover;
             background-position: center;
@@ -20,17 +20,15 @@
             margin: 0;
         }
         .card {
-            /* 2. 这里是修改中间卡片的背景（原本是绿色部分） */
-            background-image: url('https://images.unsplash.com/photo-1579546929518-9e396f3cc809?q=80&w=1000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
+            /* 中间卡片：改为半透明磨砂黑，这样能清晰透出你的背景大图 */
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
             padding: 2.5rem;
             border-radius: 1rem;
             box-shadow: 0 10px 25px rgba(0,0,0,0.8);
             text-align: center;
             max-width: 400px;
             width: 90%;
-            /* 加一点半透明遮罩，让上面的字能看清 */
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
         h1 { margin-bottom: 0.5rem; color: #38bdf8; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
