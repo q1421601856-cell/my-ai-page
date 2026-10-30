@@ -152,7 +152,6 @@
             margin-top: 1rem;
         }
 
-        /* 统一合并按钮样式 */
         .btn {
             position: relative;
             display: block;
@@ -239,6 +238,7 @@
             align-items: center;
             justify-content: center;
             animation: petIdleFloat 3.5s ease-in-out infinite;
+            transition: width 0.2s ease, height 0.2s ease;
         }
 
         @keyframes petIdleFloat {
@@ -349,7 +349,7 @@
             },
             oxygen: {
                 title: "⚙️ 氧气系统排查",
-                text: "主氧气阀门被未知权限物理锁死。旁边有一个老旧的备用机械释放杆，但拉动它可能会引起电路短路。",
+                text: "主氧气阀门被未知权限物理锁死。旁边还有一个老旧的备用机械释放杆，但拉动它可能会引起电路短路。",
                 choices: [
                     { text: "果断拉下备用机械释放杆！", next: "ending_b" },
                     { text: "放弃氧气，转头去查外景求救信号", next: "signal" }
@@ -414,8 +414,9 @@
             document.getElementById('home-view').style.display = 'block';
         };
 
-        // 4. 🤖 现代化 Pointer Events 桌宠拖拽与互动逻辑
+        // 4. 🤖 现代化 Pointer Events 桌宠拖拽与互动逻辑（防误触优化版）
         const pet = document.getElementById('cyber-pet');
+        const avatar = document.getElementById('pet-avatar');
         const petImg = document.getElementById('pet-img');
         const bubble = document.getElementById('pet-bubble');
 
@@ -435,8 +436,8 @@
 
         pet.addEventListener('dblclick', () => {
             sizeIndex = (sizeIndex + 1) % sizes.length;
-            pet.style.width = pet.style.height = sizes[sizeIndex].w;
-            document.getElementById('pet-avatar').style.width = document.getElementById('pet-avatar').style.height = sizes[sizeIndex].w;
+            avatar.style.width = sizes[sizeIndex].w;
+            avatar.style.height = sizes[sizeIndex].w;
             bubble.innerText = `已切换：${sizes[sizeIndex].name}`;
         });
 
@@ -448,8 +449,14 @@
         });
 
         pet.addEventListener('pointermove', e => {
-            if (!e.buttons) return;
-            hasMoved = true;
+            if (!e.buttons && e.pointerType === 'mouse') return;
+            // 只要移动距离超过 3 像素，就严格判定为“拖拽”而非“点击”
+            const moveDistX = Math.abs(e.clientX - startX);
+            const moveDistY = Math.abs(e.clientY - startY);
+            if (moveDistX > 3 || moveDistY > 3) {
+                hasMoved = true;
+            }
+
             currentRight -= (e.clientX - startX);
             currentBottom -= (e.clientY - startY);
             startX = e.clientX;
@@ -460,6 +467,7 @@
         });
 
         pet.addEventListener('pointerup', () => {
+            // 只有当没有发生实质拖拽时，才触发点击换动作
             if (!hasMoved) {
                 const action = petActions[Math.floor(Math.random() * petActions.length)];
                 petImg.classList.add('switching');
