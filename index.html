@@ -8,27 +8,23 @@
         :root {
             --primary-glow: #38bdf8;
             --accent-glow: #f59e0b;
-            --neon-blue: #0ea5e9;
             --neon-pink: #ec4899;
             --bg-glass: rgba(15, 23, 42, 0.62);
             --border-glass: rgba(56, 189, 248, 0.3);
-            --font-zh: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif;
-            --font-mono: "SF Mono", "JetBrains Mono", "Cascadia Code", Consolas, Menlo, monospace;
+            --font-zh: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: "SF Mono", "JetBrains Mono", Consolas, monospace;
         }
 
         * {
             -webkit-tap-highlight-color: transparent;
             touch-action: manipulation;
-        }
-
-        html, body {
-            height: 100%;
+            box-sizing: border-box;
         }
 
         body {
+            background-color: #0b0f19;
             background-image: url('1790602688051.jpeg');
             background-size: cover;
-            background-repeat: no-repeat;
             background-position: center;
             background-attachment: fixed;
             color: #f8fafc;
@@ -36,15 +32,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh;
             min-height: 100dvh;
-            justify-content: flex-start;
-            padding-top: 4.5rem;
-            padding-bottom: 2rem;
-            padding-left: clamp(0.8rem, 4vw, 1.6rem);
-            padding-right: clamp(0.8rem, 4vw, 1.6rem);
+            padding: 4.5rem clamp(0.8rem, 4vw, 1.6rem) 2rem;
             margin: 0;
-            box-sizing: border-box;
             overflow: hidden;
             position: relative;
         }
@@ -59,32 +49,14 @@
                 linear-gradient(90deg, rgba(56, 189, 248, 0.06) 1px, transparent 1px);
             background-size: 38px 38px;
             mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 78%);
-            -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.9), transparent 78%);
             pointer-events: none;
             z-index: 0;
             animation: gridDrift 24s linear infinite;
         }
 
         @keyframes gridDrift {
-            from { background-position: 0 0, 0 0; }
-            to   { background-position: 38px 38px, 38px 38px; }
-        }
-
-        /* 扫描线叠层 */
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.02) 0px,
-                rgba(255,255,255,0.02) 1px,
-                transparent 2px,
-                transparent 4px
-            );
-            pointer-events: none;
-            z-index: 1;
-            mix-blend-mode: overlay;
+            from { background-position: 0 0; }
+            to   { background-position: 38px 38px; }
         }
 
         /* 音乐与音量整体控制容器 */
@@ -98,83 +70,46 @@
             z-index: 10;
         }
 
-        .music-control {
+        .control-pill {
             background: rgba(14, 165, 233, 0.15);
             border: 1px solid rgba(56, 189, 248, 0.35);
             padding: 0.35rem 0.75rem;
             border-radius: 2rem;
             font-size: 0.75rem;
             color: #7dd3fc;
-            cursor: pointer;
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             gap: 0.3rem;
-            backdrop-filter: blur(8px);
-            transition: all 0.25s ease;
-            user-select: none;
+            cursor: pointer;
         }
 
         .music-control:hover {
             background: rgba(14, 165, 233, 0.3);
-            border-color: rgba(56, 189, 248, 0.7);
             box-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-        }
-
-        .volume-slider-box {
-            background: rgba(14, 165, 233, 0.15);
-            border: 1px solid rgba(56, 189, 248, 0.35);
-            padding: 0.35rem 0.6rem;
-            border-radius: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 0.4rem;
-            backdrop-filter: blur(8px);
-            font-size: 0.7rem;
-            color: #7dd3fc;
         }
 
         .volume-slider-box input[type="range"] {
             width: 60px;
             height: 4px;
-            background: rgba(56, 189, 248, 0.3);
-            border-radius: 2px;
-            outline: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .volume-slider-box input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #38bdf8;
+            accent-color: #38bdf8;
             cursor: pointer;
-            box-shadow: 0 0 6px #38bdf8;
         }
 
-        /* 赛博朋克高斯模糊科技感卡片 */
+        /* 科技感卡片 */
         .card {
             position: relative;
             z-index: 2;
             background: var(--bg-glass);
             backdrop-filter: blur(16px) saturate(140%);
-            -webkit-backdrop-filter: blur(16px) saturate(140%);
             padding: clamp(1.6rem, 6vw, 2.4rem) clamp(1.2rem, 5vw, 1.8rem);
             border-radius: 1.4rem;
-            box-shadow:
-                0 18px 45px rgba(0, 0, 0, 0.85),
-                0 0 28px rgba(56, 189, 248, 0.18),
-                inset 0 0 0 1px rgba(255,255,255,0.04);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85), 0 0 28px rgba(56, 189, 248, 0.18);
             text-align: center;
             max-width: 440px;
             width: 100%;
             border: 1px solid var(--border-glass);
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
-            box-sizing: border-box;
-            overflow: hidden;
-            animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both, cardBreath 6s ease-in-out 0.7s infinite;
+            animation: cardIn 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
 
         @keyframes cardIn {
@@ -182,53 +117,19 @@
             to   { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        @keyframes cardBreath {
-            0%, 100% { box-shadow: 0 18px 45px rgba(0,0,0,0.85), 0 0 22px rgba(56,189,248,0.16), inset 0 0 0 1px rgba(255,255,255,0.04); }
-            50%      { box-shadow: 0 18px 50px rgba(0,0,0,0.85), 0 0 38px rgba(56,189,248,0.30), inset 0 0 0 1px rgba(255,255,255,0.07); }
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--primary-glow), var(--neon-pink), transparent);
-            background-size: 200% 100%;
-            animation: flowLine 4s linear infinite;
-        }
-
-        @keyframes flowLine {
-            from { background-position: 200% 0; }
-            to   { background-position: -200% 0; }
-        }
-
-        .card .corner {
-            position: absolute;
-            width: 18px; height: 18px;
-            border: 2px solid rgba(56, 189, 248, 0.55);
-            pointer-events: none;
-        }
-        .card .corner.tl { top: 10px; left: 10px; border-right: none; border-bottom: none; }
-        .card .corner.tr { top: 10px; right: 10px; border-left: none; border-bottom: none; }
-        .card .corner.bl { bottom: 10px; left: 10px; border-right: none; border-top: none; }
-        .card .corner.br { bottom: 10px; right: 10px; border-left: none; border-top: none; }
-
         h1 {
             margin: 0 0 0.9rem;
             color: #7dd3fc;
-            text-shadow: 0 0 14px rgba(56, 189, 248, 0.7), 0 0 4px rgba(56,189,248,0.5);
+            text-shadow: 0 0 14px rgba(56, 189, 248, 0.7);
             font-size: clamp(1.3rem, 5.5vw, 1.6rem);
-            letter-spacing: 0.6px;
             font-weight: 800;
-            line-height: 1.35;
         }
 
         p {
             color: #cbd5e1;
             margin: 0 0 1.4rem;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
             font-size: clamp(0.9rem, 3.6vw, 1rem);
             line-height: 1.75;
-            letter-spacing: 0.3px;
         }
 
         #clock {
@@ -237,15 +138,11 @@
             color: #7dd3fc;
             margin: 0.2rem 0 1.6rem;
             font-weight: 600;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 0 0 10px rgba(56, 189, 248, 0.65);
-            letter-spacing: 1.5px;
             background: rgba(14, 165, 233, 0.12);
             padding: 0.45rem 0.9rem;
             border-radius: 2rem;
             display: inline-block;
             border: 1px solid rgba(56, 189, 248, 0.25);
-            box-shadow: inset 0 0 12px rgba(56,189,248,0.12);
         }
 
         .btn-group {
@@ -255,6 +152,7 @@
             margin-top: 1rem;
         }
 
+        /* 统一合并按钮样式 */
         .btn {
             position: relative;
             display: block;
@@ -266,119 +164,47 @@
             text-decoration: none;
             font-weight: 700;
             font-size: clamp(0.95rem, 3.8vw, 1.02rem);
-            letter-spacing: 0.5px;
-            box-shadow:
-                0 6px 18px rgba(37, 99, 235, 0.45),
-                inset 0 1px 0 rgba(255,255,255,0.25);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.45);
             border: 1px solid rgba(125, 211, 252, 0.5);
             cursor: pointer;
-            box-sizing: border-box;
-            overflow: hidden;
-            transition: transform 0.18s ease, box-shadow 0.25s ease, filter 0.25s ease;
-            -webkit-user-select: none;
             user-select: none;
             text-align: center;
-            line-height: 1.3;
-        }
-
-        .btn::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -120%;
-            width: 60%; height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.45), transparent);
-            transform: skewX(-20deg);
-            transition: left 0.6s ease;
-            pointer-events: none;
+            transition: transform 0.18s ease, box-shadow 0.25s ease;
         }
 
         .btn:hover {
             transform: translateY(-2px);
-            background: linear-gradient(135deg, #0ea5e9, #3b82f6 55%, #6366f1);
-            box-shadow:
-                0 10px 26px rgba(56, 189, 248, 0.6),
-                0 0 18px rgba(56,189,248,0.35),
-                inset 0 1px 0 rgba(255,255,255,0.35);
-            border-color: rgba(186, 230, 253, 0.9);
-        }
-
-        .btn:hover::after {
-            left: 130%;
-        }
-
-        .btn:active {
-            transform: translateY(0) scale(0.97);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.5);
-        }
-
-        .ripple {
-            position: absolute;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.5);
-            transform: scale(0);
-            animation: rippleAnim 0.6s ease-out;
-            pointer-events: none;
-        }
-        @keyframes rippleAnim {
-            to { transform: scale(2.6); opacity: 0; }
+            box-shadow: 0 10px 26px rgba(56, 189, 248, 0.6);
         }
 
         .btn-secondary {
             background: rgba(255, 255, 255, 0.07);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+            border-color: rgba(255, 255, 255, 0.22);
             color: #e2e8f0;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
         .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.16);
             border-color: rgba(56, 189, 248, 0.6);
-            box-shadow: 0 8px 22px rgba(0,0,0,0.45), 0 0 16px rgba(56,189,248,0.3);
             color: #ffffff;
         }
 
-        .btn-secondary:active {
-            transform: translateY(0) scale(0.97);
-        }
-
-        /* 剧情故事交互区域 */
-        #story-box {
-            text-align: left;
-            display: none;
-        }
-
-        #story-title {
-            color: #fbbf24;
-            text-shadow: 0 0 12px rgba(245, 158, 11, 0.5);
-            font-size: clamp(1.15rem, 4.6vw, 1.3rem);
-            margin: 0 0 0.9rem;
-            line-height: 1.4;
-            font-weight: 800;
-        }
-
+        #story-box { text-align: left; display: none; }
+        #story-title { color: #fbbf24; font-size: 1.25rem; margin-bottom: 0.8rem; }
         #story-text {
             min-height: 96px;
             margin-bottom: 1.3rem;
             color: #e2e8f0;
-            font-size: clamp(0.92rem, 3.7vw, 1rem);
-            line-height: 1.75;
-            background: linear-gradient(180deg, rgba(0,0,0,0.28), rgba(0,0,0,0.18));
+            background: rgba(0,0,0,0.25);
             padding: 0.95rem 1rem;
             border-radius: 0.6rem;
             border-left: 3px solid var(--accent-glow);
-            box-shadow: inset 0 0 18px rgba(245,158,11,0.06);
             white-space: pre-line;
+            line-height: 1.75;
         }
 
-        #story-text.fade-in {
-            animation: textFade 0.45s ease both;
-        }
-        @keyframes textFade {
-            from { opacity: 0; transform: translateY(8px); }
-            to   { opacity: 1; transform: translateY(0); }
-        }
-
-        /* 🌸 多动作桌宠容器 */
+        /* 🌸 桌宠悬浮挂件 */
         #cyber-pet {
             position: fixed;
             bottom: 25px;
@@ -392,11 +218,6 @@
             touch-action: none;
         }
 
-        #cyber-pet:active {
-            cursor: grabbing;
-        }
-
-        /* 桌宠对话气泡 */
         #pet-bubble {
             background: rgba(75, 18, 55, 0.9);
             border: 1px solid rgba(244, 114, 182, 0.7);
@@ -405,168 +226,109 @@
             border-radius: 0.8rem;
             font-size: 0.75rem;
             margin-bottom: 6px;
-            box-shadow: 0 0 15px rgba(236, 72, 153, 0.4);
             backdrop-filter: blur(6px);
             white-space: nowrap;
             pointer-events: none;
-            transform-origin: bottom right;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.2s ease;
         }
 
-        /* 🌟 动图尺寸容器 + 待机呼吸浮动动画 */
         #pet-avatar {
             width: 100px;
             height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
-            filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
-            transition: transform 0.2s ease, width 0.2s ease, height 0.2s ease;
             animation: petIdleFloat 3.5s ease-in-out infinite;
         }
 
         @keyframes petIdleFloat {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50%      { transform: translateY(-8px) rotate(2deg); }
+            0%, 100% { transform: translateY(0); }
+            50%      { transform: translateY(-8px); }
         }
 
-        /* 🌟 核心绝招：给图片加入“无缝丝滑渐变过渡”类 */
         #pet-img {
             width: 100%;
             height: 100%;
             object-fit: contain;
             transition: opacity 0.25s ease-in-out, transform 0.25s ease-in-out;
-            opacity: 1;
-            transform: scale(1);
         }
 
-        /* 切换时的淡出/缩放瞬间状态 */
         #pet-img.switching {
             opacity: 0;
-            transform: scale(0.85) rotate(-5deg);
-        }
-
-        #cyber-pet.dragging #pet-avatar {
-            animation: none;
-            transform: scale(0.9) rotate(12deg) translateY(4px);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { animation: none !important; transition: none !important; }
+            transform: scale(0.85);
         }
     </style>
 </head>
 <body>
-    <!-- BGM 音乐与音量悬浮控制面板 -->
     <div class="music-control-container">
-        <div class="music-control" id="musicBtn" onclick="toggleMusic()">
+        <div class="control-pill music-control" id="musicBtn" onclick="toggleMusic()">
             <span id="musicIcon">🔇</span> <span id="musicText">BGM 关闭</span>
         </div>
-        <div class="volume-slider-box">
+        <div class="control-pill volume-slider-box">
             <span>🔈</span>
-            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7" oninput="adjustVolume(this.value)" title="调节音量">
+            <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7" oninput="adjustVolume(this.value)">
             <span>🔊</span>
         </div>
     </div>
 
-    <!-- 隐藏式音频标签 -->
     <audio id="bgm" loop preload="auto">
         <source src="bgm.mp3" type="audio/mpeg">
     </audio>
 
     <div class="card">
-        <span class="corner tl"></span>
-        <span class="corner tr"></span>
-        <span class="corner bl"></span>
-        <span class="corner br"></span>
-
-        <!-- 首页默认显示区域 -->
         <div id="home-view">
             <h1>你只是怕了。这谁不怕</h1>
             <p>这是我在三星手机上通过 GitHub 搭建的第一个个人网页，正在探索数字世界。</p>
-
-            <!-- 实时时钟 -->
-            <div>
-                <div id="clock">加载中...</div>
-            </div>
-
+            <div><div id="clock">加载中...</div></div>
             <div class="btn-group">
                 <button class="btn" onclick="startStory()">🚀 进入科幻任务</button>
-                <a href="https://genshin.hoyoverse.com/zh-tw" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" style="text-align: center;" onclick="if(isPlaying){ toggleMusic(); }">✨ 原神启动！</a>
+                <a href="https://genshin.hoyoverse.com/zh-tw" class="btn btn-secondary" target="_blank" rel="noopener noreferrer" onclick="if(isPlaying) toggleMusic();">✨ 原神启动！</a>
             </div>
         </div>
 
-        <!-- 科幻互动剧情交互区域 -->
         <div id="story-box">
-            <h1 id="story-title" style="font-size: 1.25rem; margin-bottom: 0.8rem;"></h1>
+            <h1 id="story-title"></h1>
             <div id="story-text"></div>
             <div id="story-choices" class="btn-group"></div>
         </div>
     </div>
 
-    <!-- 🤖 多动作八重神子桌宠挂件 -->
     <div id="cyber-pet">
         <div id="pet-bubble">双击变大小，点我丝滑换动作！</div>
         <div id="pet-avatar">
-            <img id="pet-img" src="yae.gif" alt="八重神子" onerror="this.style.display='none'; this.parentNode.innerText='yae.gif';">
+            <img id="pet-img" src="yae.gif" alt="八重神子">
         </div>
     </div>
 
-    <!-- 脚本：时钟、BGM、剧情、拖拽、双击缩放与无缝淡入淡出切换逻辑 -->
     <script>
-        // 1. 实时时钟逻辑
-        function updateClock() {
+        // 1. 实时时钟
+        const updateClock = () => {
             const now = new Date();
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const day = String(now.getDate()).padStart(2, '0');
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-
-            document.getElementById('clock').innerText = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
+            const pad = n => String(n).padStart(2, '0');
+            document.getElementById('clock').innerText = 
+                `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ` +
+                `${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+        };
         updateClock();
         setInterval(updateClock, 1000);
 
-        // 2. BGM 音乐与音量控制逻辑
+        // 2. BGM 控制
         const bgm = document.getElementById('bgm');
-        const musicBtn = document.getElementById('musicBtn');
         const musicIcon = document.getElementById('musicIcon');
         const musicText = document.getElementById('musicText');
         let isPlaying = false;
-
         bgm.volume = 0.7;
 
         function toggleMusic() {
-            if (isPlaying) {
-                bgm.pause();
-                musicIcon.innerText = "🔇";
-                musicText.innerText = "BGM 关闭";
-                isPlaying = false;
-            } else {
-                bgm.play().then(() => {
-                    musicIcon.innerText = "🔊";
-                    musicText.innerText = "BGM 播放";
-                    isPlaying = true;
-                }).catch(err => {
-                    console.log("自动播放被浏览器拦截", err);
-                });
-            }
+            isPlaying ? bgm.pause() : bgm.play().catch(() => {});
+            musicIcon.innerText = isPlaying ? "🔇" : "🔊";
+            musicText.innerText = isPlaying ? "BGM 关闭" : "BGM 播放";
+            isPlaying = !isPlaying;
         }
 
-        function adjustVolume(val) {
-            bgm.volume = val;
-            if (val == 0 && isPlaying) {
-                musicIcon.innerText = "🔇";
-                musicText.innerText = "BGM 静音";
-            } else if (val > 0 && isPlaying) {
-                musicIcon.innerText = "🔊";
-                musicText.innerText = "BGM 播放";
-            }
-        }
+        const adjustVolume = val => { bgm.volume = val; };
 
-        // 3. 科幻互动剧情数据与状态机
+        // 3. 剧情引擎
         const storyData = {
             start: {
                 title: "⚠️ 紧急状态：深空警报",
@@ -579,220 +341,135 @@
             },
             comm: {
                 title: "📡 外部通讯尝试",
-                text: "你尝试强行接通外部频道。滋滋的电流声中，一个冰冷机械合成音响起：‘警告，区域隔离已启动，您已被锁定。’ 受到电磁冲击，氧气倒计时加速到了 5 分钟！",
+                text: "你尝试强行接通外部频道。电流声中传来机械合成音：‘警告，区域隔离已启动。’ 受到电磁冲击，氧气倒计时加速到了 5 分钟！",
                 choices: [
-                    { text: "情急之下，立刻冲去手动检查氧气阀门", next: "oxygen_from_comm" },
-                    { text: "不管氧气，强行向求救信号发送盲发请求", next: "ending_a" }
+                    { text: "立刻冲去手动检查氧气阀门", next: "oxygen_from_comm" },
+                    { text: "强行向求救信号发送盲发请求", next: "ending_a" }
                 ]
             },
             oxygen: {
                 title: "⚙️ 氧气系统排查",
-                text: "你扑向主控制台，发现主氧气阀门被某种未知权限物理锁死。不过，旁边还有一个老旧的备用机械释放杆，但拉动它可能会引起电路短路。",
+                text: "主氧气阀门被未知权限物理锁死。旁边有一个老旧的备用机械释放杆，但拉动它可能会引起电路短路。",
                 choices: [
                     { text: "果断拉下备用机械释放杆！", next: "ending_b" },
-                    { text: "放弃氧气，立刻转头去查外景求救信号", next: "signal" }
+                    { text: "放弃氧气，转头去查外景求救信号", next: "signal" }
                 ]
             },
             oxygen_from_comm: {
                 title: "⚙️ 绝境求生",
-                text: "你冒着剧烈喘息的危险冲到氧气舱，在倒计时归零前狠狠砸下了备用机械释放杆。伴随着沉闷的轰鸣，备用氧气喷涌而出！",
-                choices: [
-                    { text: "查看舱外情况", next: "ending_b" }
-                ]
+                text: "你冒险冲到氧气舱，在倒计时归零前砸下了备用机械释放杆。备用氧气喷涌而出！",
+                choices: [{ text: "查看舱外情况", next: "ending_b" }]
             },
             signal: {
                 title: "🌌 未知信号源",
-                text: "你调出外景摄像头。屏幕上，一艘早已失踪三十年的同型号旧空间站正静静地贴着你的舱体漂浮，上面没有任何生命体征，却正向你不断发送着重复的摩斯密码。",
+                text: "屏幕上，一艘失踪三十年的同型号旧空间站正静静漂浮，不断重复发送摩斯密码。",
                 choices: [
                     { text: "向它发送自动对接请求", next: "ending_c" },
-                    { text: "切断所有外部电源，假装这里什么也没有", next: "ending_a" }
+                    { text: "切断外部电源，假装无事发生", next: "ending_a" }
                 ]
             },
             ending_a: {
                 title: "❌ 结局一：深空孤寂",
-                text: "通讯彻底瘫痪，氧气耗尽。在黑暗与绝对的寂静中，你闭上双眼，空间站化为了宇宙中又一颗冰冷的漂浮残骸。\n\n【达成结局：窒息迷失】",
-                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+                text: "通讯彻底瘫痪，氧气耗尽。空间站化为了宇宙中冰冷的漂浮残骸。\n\n【达成结局：窒息迷失】",
+                choices: [{ text: "🔄 重新开始", next: "start" }, { text: "🏠 返回首页", next: "home" }]
             },
             ending_b: {
                 title: "✅ 结局二：绝境逢生",
-                text: "你成功手动开启了备用氧气！几分钟后，远处的联合舰队巡逻船检测到了你的应急求救波段，拖曳救援船缓缓靠岸。你得救了。\n\n【达成结局：死地后生】",
-                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+                text: "联合舰队巡逻船检测到了你的应急求救波段，救援船缓缓靠岸。你得救了。\n\n【达成结局：死地后生】",
+                choices: [{ text: "🔄 重新开始", next: "start" }, { text: "🏠 返回首页", next: "home" }]
             },
             ending_c: {
                 title: "🌀 结局三：镜中镜像",
-                text: "对接成功发出咔哒一声巨响。舱门缓缓开启，烟雾散去，对面走出的那个身影穿着和你一模一样的制服，正微笑着向你伸出手……\n\n【达成结局：未知接触】",
-                choices: [{ text: "🔄 重新开始任务", next: "start" }, { text: "🏠 返回首页", next: "home" }]
+                text: "舱门开启，对面走出的那个身影穿着和你一模一样的制服，正微笑着向你伸出手……\n\n【达成结局：未知接触】",
+                choices: [{ text: "🔄 重新开始", next: "start" }, { text: "🏠 返回首页", next: "home" }]
             }
         };
 
-        function startStory() {
+        const startStory = () => {
             if (!isPlaying) toggleMusic();
             document.getElementById('home-view').style.display = 'none';
             document.getElementById('story-box').style.display = 'block';
             showNode('start');
-        }
+        };
 
-        function showNode(nodeKey) {
+        const showNode = nodeKey => {
             const node = storyData[nodeKey];
             document.getElementById('story-title').innerText = node.title;
-            const storyText = document.getElementById('story-text');
-            storyText.innerText = node.text;
-            
-            storyText.classList.remove('fade-in');
-            void storyText.offsetWidth;
-            storyText.classList.add('fade-in');
+            document.getElementById('story-text').innerText = node.text;
 
             const choicesContainer = document.getElementById('story-choices');
             choicesContainer.innerHTML = '';
 
-            node.choices.forEach((choice, index) => {
+            node.choices.forEach(choice => {
                 const btn = document.createElement('button');
-                btn.className = 'btn';
-                if (choice.next === 'home') btn.className = 'btn btn-secondary';
+                btn.className = `btn ${choice.next === 'home' ? 'btn-secondary' : ''}`;
                 btn.innerText = choice.text;
-                btn.style.animationDelay = (index * 0.06) + 's';
-                btn.onclick = () => {
-                    if (choice.next === 'home') returnHome();
-                    else showNode(choice.next);
-                };
+                btn.onclick = () => choice.next === 'home' ? returnHome() : showNode(choice.next);
                 choicesContainer.appendChild(btn);
             });
-        }
+        };
 
-        function returnHome() {
+        const returnHome = () => {
             document.getElementById('story-box').style.display = 'none';
             document.getElementById('home-view').style.display = 'block';
-        }
+        };
 
-        // 4. 🤖 拖拽、双击缩放 + 🌟 无缝淡入淡出的多动作切换引擎
+        // 4. 🤖 现代化 Pointer Events 桌宠拖拽与互动逻辑
         const pet = document.getElementById('cyber-pet');
-        const avatar = document.getElementById('pet-avatar');
         const petImg = document.getElementById('pet-img');
         const bubble = document.getElementById('pet-bubble');
 
         const petActions = [
             { src: "yae.gif", text: "哎呀，小家伙，又在偷懒吗？" },
             { src: "yae_cry.gif", text: "呜…你怎么忍心欺负我嘛！" },
-            { src: "yae.gif", text: "油豆腐，我的最爱~ 唔姆唔姆。" },
-            { src: "yae.gif", text: "戴上帽子，本宫就是深空舰长啦！" }
+            { src: "yae.gif", text: "油豆腐，我的最爱~ 唔姆唔姆。" }
         ];
 
-        let startX, startY;
-        let currentRight = 25;
-        let currentBottom = 25;
-        let hasMoved = false;
-
+        let startX, startY, currentRight = 25, currentBottom = 25, hasMoved = false;
         const sizes = [
-            { w: '70px', h: '70px', name: '小号模式' },
-            { w: '100px', h: '100px', name: '标准模式' },
-            { w: '140px', h: '140px', name: '大号看板娘' }
+            { w: '70px', name: '小号模式' },
+            { w: '100px', name: '标准模式' },
+            { w: '140px', name: '大号看板娘' }
         ];
-        let currentSizeIndex = 1;
+        let sizeIndex = 1;
 
-        // 双击切换大小
         pet.addEventListener('dblclick', () => {
-            currentSizeIndex = (currentSizeIndex + 1) % sizes.length;
-            const newSize = sizes[currentSizeIndex];
-            avatar.style.width = newSize.w;
-            avatar.style.height = newSize.h;
-            
-            bubble.innerText = `已切换为：${newSize.name}`;
-            bubble.style.transform = 'scale(1.1)';
-            setTimeout(() => bubble.style.transform = 'scale(1)', 200);
+            sizeIndex = (sizeIndex + 1) % sizes.length;
+            pet.style.width = pet.style.height = sizes[sizeIndex].w;
+            document.getElementById('pet-avatar').style.width = document.getElementById('pet-avatar').style.height = sizes[sizeIndex].w;
+            bubble.innerText = `已切换：${sizes[sizeIndex].name}`;
         });
 
-        function dragStart(e) {
+        pet.addEventListener('pointerdown', e => {
             hasMoved = false;
-            pet.classList.add('dragging');
-            
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            
-            startX = clientX;
-            startY = clientY;
+            startX = e.clientX;
+            startY = e.clientY;
+            pet.setPointerCapture(e.pointerId);
+        });
 
-            window.addEventListener('mousemove', dragMove);
-            window.addEventListener('mouseup', dragEnd);
-            window.addEventListener('touchmove', dragMove, { passive: false });
-            window.addEventListener('touchend', dragEnd);
-        }
-
-        function dragMove(e) {
+        pet.addEventListener('pointermove', e => {
+            if (!e.buttons) return;
             hasMoved = true;
+            currentRight -= (e.clientX - startX);
+            currentBottom -= (e.clientY - startY);
+            startX = e.clientX;
+            startY = e.clientY;
 
-            if (e.cancelable) {
-                e.preventDefault();
-            }
+            pet.style.right = Math.max(10, currentRight) + 'px';
+            pet.style.bottom = Math.max(10, currentBottom) + 'px';
+        });
 
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-
-            const deltaX = clientX - startX;
-            const deltaY = clientY - startY;
-
-            startX = clientX;
-            startY = clientY;
-
-            currentRight -= deltaX;
-            currentBottom -= deltaY;
-
-            const maxRight = window.innerWidth - avatar.offsetWidth - 20;
-            const maxBottom = window.innerHeight - avatar.offsetHeight - 50;
-            
-            currentRight = Math.max(10, Math.min(maxRight, currentRight));
-            currentBottom = Math.max(10, Math.min(maxBottom, currentBottom));
-
-            pet.style.right = currentRight + 'px';
-            pet.style.bottom = currentBottom + 'px';
-        }
-
-        function dragEnd(e) {
-            pet.classList.remove('dragging');
-
-            window.removeEventListener('mousemove', dragMove);
-            window.removeEventListener('mouseup', dragEnd);
-            window.removeEventListener('touchmove', dragMove);
-            window.removeEventListener('touchend', dragEnd);
-
-            // 点击时触发无缝动作切换
+        pet.addEventListener('pointerup', () => {
             if (!hasMoved) {
-                const randomAction = petActions[Math.floor(Math.random() * petActions.length)];
-                
-                // 🌟 核心无缝切换逻辑：先让图片透明度变 0 产生缩放缓冲
+                const action = petActions[Math.floor(Math.random() * petActions.length)];
                 petImg.classList.add('switching');
-
                 setTimeout(() => {
-                    petImg.src = randomAction.src; // 替换动图
-                    petImg.classList.remove('switching'); // 恢复透明度与大小，实现丝滑淡入
-                }, 200); // 0.2秒的过渡时间
-
-                // 弹出对应台词
-                bubble.innerText = randomAction.text;
-                bubble.style.transform = 'scale(1.1)';
-                setTimeout(() => bubble.style.transform = 'scale(1)', 200);
+                    petImg.src = action.src;
+                    petImg.classList.remove('switching');
+                }, 200);
+                bubble.innerText = action.text;
             }
-        }
-
-        pet.addEventListener('mousedown', dragStart);
-        pet.addEventListener('touchstart', dragStart, { passive: true });
-
-        // 5. 水波纹点击反馈
-        function attachRipple() {
-            document.addEventListener('pointerdown', (e) => {
-                const btn = e.target.closest('.btn');
-                if (!btn) return;
-                const rect = btn.getBoundingClientRect();
-                const size = Math.max(rect.width, rect.height);
-                const ripple = document.createElement('span');
-                ripple.className = 'ripple';
-                ripple.style.width = ripple.style.height = size + 'px';
-                ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
-                ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
-                btn.appendChild(ripple);
-                setTimeout(() => ripple.remove(), 600);
-            });
-        }
-        attachRipple();
+        });
     </script>
 </body>
 </html>
